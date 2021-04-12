@@ -33,7 +33,11 @@ class NaiveBayesNGram():
             text = ' '.join([word for word in text.split() if word not in stops])
         return text
 
-    def fit(self, documents, labels) -> None:
+    def fit(
+            self, 
+            documents, 
+            labels
+        ) -> None:
         if not type(documents) == pd.Series:
             raise NotImplementedError('Implement handling of non pandas format')
         documents = documents.apply(self._preprocess_text).tolist()
