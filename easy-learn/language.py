@@ -41,8 +41,8 @@ class NaiveBayesNGram():
             self.bow_transformer = CountVectorizer(ngram_range=(self.n,self.n)).fit(documents)
         bow = self.bow_transformer.transform(documents)
         if self.use_tfidf:
-            tfidf_transformer = TfidfTransformer().fit(bow)
-            bow = tfidf_transformer.transform(bow)
+            self.tfidf_transformer = TfidfTransformer().fit(bow)
+            bow = self.tfidf_transformer.transform(bow)
         self.model = MultinomialNB().fit(bow,labels)
 
     def predict(self, documents) -> pd.Series:
@@ -50,7 +50,10 @@ class NaiveBayesNGram():
             raise NotImplementedError('Implement handling of non pandas format')
         documents = documents.apply(self._preprocess_text).tolist()
         test_bow = self.bow_transformer.transform(preprocessed_text)
-
+        if self.use_tfidf:
+            test_bow = self.tfidf_transformer.transform(test_bow)
+        predictions = self.model.predict(test_tfidf)
+        return predictions
         
 
 
