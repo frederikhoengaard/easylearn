@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 from string import punctuation
 from nltk.corpus import stopwords
 
@@ -49,22 +51,21 @@ class NaiveBayesNGram():
         if not type(documents) == pd.Series:
             raise NotImplementedError('Implement handling of non pandas format')
         documents = documents.apply(self._preprocess_text).tolist()
-        test_bow = self.bow_transformer.transform(preprocessed_text)
+        test_bow = self.bow_transformer.transform(documents)
         if self.use_tfidf:
             test_bow = self.tfidf_transformer.transform(test_bow)
-        predictions = self.model.predict(test_tfidf)
+        predictions = self.model.predict(test_bow)
         return predictions
         
 
-
 def main():
-
     train = pd.read_json('data/music_reviews_train.json',lines=True)[['reviewText','sentiment']].dropna()
-
-    #print(data.head())
-    clf = NaiveBayesNGram(remove_stops=True,remove_punctuation=True,use_tfidf=True)
-    #clf.fit(train['reviewText'],train['sentiment'])
-    #print(type(train['reviewText']))
+    X,y = train['reviewText'], train['sentiment']
+    train_X, test_X, train_y, test_y = train_test_split(X,y, test_size=0.2)
+    clf = NaiveBayesNGram(n=2,remove_stops=False,remove_punctuation=True,use_tfidf=True)
+    clf.fit(train_X,train_y)
+    y_pred = clf.predict(test_X)
+    print(accuracy_score(test_y,y_pred))
 
 if __name__ == '__main__':
     main()
