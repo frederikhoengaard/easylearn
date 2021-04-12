@@ -6,8 +6,8 @@ with open('requirements.txt') as infile:
 setup(
     name='easy-learn',
     version = '0.1.0',
-    url = 'https://github.com/frederikhoengaard/fhlearn/tree/main',
-    download_url = 'https://github.com/frederikhoengaard/fhlearn/tree/main',
+    url = 'https://github.com/frederikhoengaard/easy-learn',
+    download_url = 'https://github.com/frederikhoengaard/easy-learn/tree/main/easy-learn',
     license = '',
     author = 'Frederik P. Høngaard',
     author_email = 'mail@frederikhoengaard.com',
